@@ -1,0 +1,37 @@
+- hosts: web
+  tasks: 
+  - name: install the latest version of Apache
+    yum:
+      name: httpd
+      state: latest
+
+
+
+  - name: make sure a service is running
+    systemd:
+      state: started
+      enabled: yes
+      name: httpd
+
+  - name: install unzip
+    yum:
+      name: unzip
+      state: latest
+
+  - name: unarchive the file to be downloaded and save in /tmp
+    unarchive:
+      src: https://www.free-css.com/assets/files/free-css-templates/download/page286/dropbeat.zip
+      dest: /tmp/dropbeat
+      remote_src: yes
+
+  - name: copy index file to Apache directory
+    copy: 
+      src: /tmp/viking/index.html
+      dest: /var/www/html/
+      remote_src: yes
+
+  - name: restart Apache sevice
+    service:
+      name: httpd
+      state: restarted
+      
